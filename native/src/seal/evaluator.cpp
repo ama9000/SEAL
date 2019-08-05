@@ -2377,6 +2377,79 @@ namespace seal
 #endif
     }
 
+    /* TODO: add new function here
+    void Evaluator::prepare_galois_rotation(uint64_t galois_elt, int step, const GaloisKeys &galois_keys, MemoryPoolHandle pool)
+    {
+
+      auto &context_data = *context_->get_context_data(encrypted.parms_id());
+      auto &parms = context_data.parms();
+      auto &coeff_modulus = parms.coeff_modulus();
+      size_t coeff_count = parms.poly_modulus_degree();
+      size_t coeff_mod_count = coeff_modulus.size();
+      size_t encrypted_size = encrypted.size();
+
+      // Size check
+      if (!product_fits_in(coeff_count, coeff_mod_count))
+      {
+        throw logic_error("invalid parameters");
+      }
+
+      uint64_t m = mul_safe(static_cast<uint64_t>(coeff_count), uint64_t(2));
+      uint64_t subgroup_size = static_cast<uint64_t>(coeff_count >> 1);
+      int n_power_of_two = get_power_of_two(static_cast<uint64_t>(coeff_count));
+
+      // Verify parameters
+      if (!(galois_elt & 1) || unsigned_geq(galois_elt, m))
+      {
+        throw invalid_argument("Galois element is not valid");
+      }
+      if (encrypted_size > 2)
+      {
+        throw invalid_argument("encrypted size must be 2");
+      }
+
+      // Check if Galois key is generated or not.
+      // If not, attempt a bit decomposition; maybe we have log(n) many keys
+      if (!galois_keys.has_key(galois_elt))
+      {
+        // galois_elt = 3^order1 * (-1)^order2
+        uint64_t order1 = Zmstar_to_generator_.at(galois_elt).first;
+        uint64_t order2 = Zmstar_to_generator_.at(galois_elt).second;
+
+        // We use either 3 or -3 as our generator, depending on which gives smaller HW
+        uint64_t two_power_of_gen = 3;
+
+        // Does order1 or n/2-order1 have smaller Hamming weight?
+        if (hamming_weight(subgroup_size - order1) < hamming_weight(order1))
+        {
+          order1 = subgroup_size - order1;
+          try_mod_inverse(3, m, two_power_of_gen);
+        }
+
+        while(order1)
+        {
+          if (order1 & 1)
+          {
+            if (!galois_keys.has_key(two_power_of_gen))
+            {
+              throw invalid_argument("Galois key not present");
+            }
+            apply_galois_inplace(encrypted, two_power_of_gen, galois_keys, pool);
+          }
+          two_power_of_gen = mul_safe(two_power_of_gen, two_power_of_gen);
+          two_power_of_gen &= (m - 1);
+          order1 >>= 1;
+        }
+        return;
+      }
+
+//      apply_galois_inplace(Ciphertext &encrypted, uint64_t galois_elt,
+//      const GaloisKeys &galois_keys, MemoryPoolHandle pool);
+
+    }
+    */ TODO: end new function
+
+
     void Evaluator::apply_galois_inplace(Ciphertext &encrypted, uint64_t galois_elt,
         const GaloisKeys &galois_keys, MemoryPoolHandle pool)
     {

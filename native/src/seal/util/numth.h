@@ -5,6 +5,7 @@
 
 #include <stdexcept>
 #include <cstdint>
+#include <cmath>
 #include <vector>
 #include <tuple>
 #include "seal/smallmodulus.h"
@@ -14,6 +15,32 @@ namespace seal
 {
     namespace util
     {
+
+        inline void naf(int value, std::vector<int> &Z){
+
+          // record the sign of the original value
+          bool sign = value < 0;
+          value = std::abs(value);
+
+          // transform to non-adjacent form (NAF)
+          while (value > 0) {
+            int zi;
+            value % 2 == 0? zi = 0 : zi = 2 - (value % 4);
+            Z.push_back(zi);
+            value = (value - Z[Z.size() - 1]) / 2;
+          }
+
+          // reset the sign in the result
+          if (sign)
+            std::transform(Z.begin(), Z.end(), Z.begin(), [](int z){return -z;});
+        }
+
+        inline void naf_to_steps(const std::vector<int> &Z, std::vector<int> &steps){
+          for (size_t i = 0; i < Z.size(); i++){
+            steps.push_back(std::pow(2, i) * Z[i]);
+          }
+        }
+
         inline std::uint64_t gcd(std::uint64_t x, std::uint64_t y)
         {
 #ifdef SEAL_DEBUG
