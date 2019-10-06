@@ -2431,8 +2431,7 @@ namespace seal
             // TODO: START NAF MODIFICATION HERE
             // Convert the steps to NAF: guarantees using smallest HW
 
-            vector<int> naf_array;
-            naf(order1, naf_array);
+            vector<int> naf_array = naf(order1);
 
             for (size_t i = 0; i < naf_array.size(); i++)
             {
