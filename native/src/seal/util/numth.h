@@ -16,8 +16,8 @@ namespace seal
     namespace util
     {
 
-        inline void naf(int value, std::vector<int> &Z){
-
+        inline std::vector<int> naf(int value){
+          std::vector<int> Z;
           // record the sign of the original value
           bool sign = value < 0;
           value = std::abs(value);
@@ -33,12 +33,15 @@ namespace seal
           // reset the sign in the result
           if (sign)
             std::transform(Z.begin(), Z.end(), Z.begin(), [](int z){return -z;});
-        }
 
-        inline void naf_to_steps(const std::vector<int> &Z, std::vector<int> &steps){
+          std::vector<int> steps;
+
+          // Transform NAF to steps
           for (size_t i = 0; i < Z.size(); i++){
             steps.push_back(std::pow(2, i) * Z[i]);
           }
+
+          return steps;
         }
 
         inline std::uint64_t gcd(std::uint64_t x, std::uint64_t y)
